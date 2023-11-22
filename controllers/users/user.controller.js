@@ -7,6 +7,8 @@ const LeaderSchema = require("../../models/leaders.model");
 const twilio = require("twilio")(process.env.SID, process.env.AUTH_TOKEN);
 
 const registerUser = async (req, res) => {
+  console.log("making request")
+  console.log(req.body)
   const {
     amazina,
     intara,
@@ -56,21 +58,21 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(ijambobanga, 10);
 
     // send message
-    const otp = generateOtp();
-    await twilio.messages.create({
-      body: `Kode yawe yo muri Rangurura ni ${otp}`,
-      to: telephone,
-      from: "+12765985304",
-    });
+    // const otp = generateOtp();
+    // await twilio.messages.create({
+    //   body: `Kode yawe yo muri Rangurura ni ${otp}`,
+    //   to: telephone,
+    //   from: "+12765985304",
+    // });
 
-    // Save the otp
-    const hashedOtp = await bcrypt.hash(otp, 10);
-    const newOtp = new Otp({
-      number: telephone,
-      otp: hashedOtp,
-    });
+    // // Save the otp
+    // const hashedOtp = await bcrypt.hash(otp, 10);
+    // const newOtp = new Otp({
+    //   number: telephone,
+    //   otp: hashedOtp,
+    // });
 
-    await newOtp.save();
+    // await newOtp.save();
 
     // Create a new user
     const newUser = new User({
@@ -121,6 +123,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
+    console.log(req.body)
     const { indangamuntu, ijambobanga } = req.body;
     if (!indangamuntu || !ijambobanga)
       return res.status(400).json({
@@ -133,7 +136,7 @@ const loginUser = async (req, res) => {
         message: "shyiramo indangamuntu na password bitarimo ikosa!",
       });
 
-    return res.status(200).json({
+    return res.status(200).cookie("token",generateToken(user)).json({
       message: "User logged in successfully",
       token: generateToken(user),
       indangamuntu, //this is must be stored on the fronted and used when making table or demanding difference services from the backend
