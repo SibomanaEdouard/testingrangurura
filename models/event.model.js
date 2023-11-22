@@ -1,13 +1,13 @@
 require('dotenv').config();
 const mongoose = require("mongoose");
 const {Sequelize,DataTypes}=require('sequelize');
-const sequelize=new Sequelize(
-  process.env.DATABASE,
-  process.env.USER,
-  process.env.PASSWORD,
+const sequelize = new Sequelize(
+  process.env.DB_DATABASE,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: process.env.HOST,
-    dialect: "mysql",
+    host: process.env.DB_HOST,
+    dialect: "postgres",
   }
 );
 
